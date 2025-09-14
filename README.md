@@ -50,23 +50,23 @@
 ## ⚙ Installation
 
 1. Clone the repo  
-```bash
+  ```bash
    git clone https://github.com/yourusername/typescript-start.git
    cd typescript-start
 2. Install dependencies
-```bash
-    npm install
+    ```bash
+      npm install
 
 3. Start development server
-```bash
-    npm run dev
+    ```bash
+      npm run dev
 4.Build for production
-```bash
-    npm run build    
+    ```bash
+     npm run build    
 
 
 
-
+------------------
 
 
 📋 Usage
