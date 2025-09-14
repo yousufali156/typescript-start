@@ -1,14 +1,10 @@
-import { add, format } from "date-fns";
-import './App.css'
+import CurrentTimeAndDate from "./Components/CurrentTimeAndDate/CurrentTimeAndDate";
+
+
 
 function App() {
-
-  return (
-    <>
-      Tomorrow's Date: {format(add(new Date(), { days: 1 }), "do MMMM yyyy")}
-    </>
-  )
+  return <CurrentTimeAndDate />;
+  
 }
 
-
-export default App
+export default App;
