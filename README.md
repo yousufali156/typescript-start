@@ -25,11 +25,11 @@
 
 ## ✅ Features
 
-- Live digital clock showing current time updated every second  
+- Live digital clock showing the current time updated every second  
 - Calendar view with month navigation (prev/next)  
 - Tasks / Todo list per date; add / toggle / delete tasks  
 - Persist tasks via `localStorage` so no data loss on refresh  
-- UI with responsive design, user feedback (e.g. selected date highlight, task indicators)  
+- UI with responsive design, user feedback (e.g., selected date highlight, task indicators)  
 - Footer with social links and author information  
 
 ---
@@ -42,7 +42,7 @@
 | TypeScript                   | Static typing           |
 | date-fns                     | Date/time utilities     |
 | Tailwind CSS / or custom CSS | Styling                 |
-| Vite                         | Build tool / dev server |
+| Vite                         | Build tool/dev server |
 | Vercel                       | Deployment platform     |
 
 ---
@@ -50,23 +50,19 @@
 ## ⚙ Installation
 
 1. Clone the repo  
-  ```bash
    git clone https://github.com/yourusername/typescript-start.git
    cd typescript-start
 2. Install dependencies
-    ```bash
-      npm install
+    npm install
 
 3. Start development server
-    ```bash
-      npm run dev
-4.Build for production
-    ```bash
-     npm run build    
-
-
+    npm run dev
+4. Build for production
+   npm run build 
 
 ------------------
+
+
 
 
 📋 Usage
@@ -116,9 +112,18 @@ I’m happy to review enhancements (UX, accessibility, styling, performance, etc
 
 This project is licensed under MIT License
 
-👤 Author
+---
 
-Yousuf Ali
-Portfolio 
- · GitHub
- · LinkedIn
+## 👤 Author
+
+**Yousuf Ali**  
+
+- 🌐 [Portfolio](https://yousufali.dev)  
+- 💻 [GitHub](https://github.com/yousufali156)  
+- 🔗 [LinkedIn](https://www.linkedin.com/in/mdyousufali)  
+
+---
+
+
+
+
