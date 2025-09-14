@@ -11,7 +11,8 @@ import {
   addMonths,
   subMonths,
 } from "date-fns";
-import "./CurrentTimeandDate.css";
+import "./CurrentTimeAndDate.css";
+
 import Time from "../Time/Time";
 
 /* Types -------------------------------------------------------------- */
