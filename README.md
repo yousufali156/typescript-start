@@ -50,7 +50,7 @@
 ## ⚙ Installation
 
 1. Clone the repo  
-  ```bash
+```bash
    git clone https://github.com/yourusername/typescript-start.git
    cd typescript-start
 2. Install dependencies
@@ -69,56 +69,3 @@
 ------------------
 
 
-📋 Usage
-
-The clock at the top displays current time & date.
-
-Use the Prev / Next buttons to navigate months in the calendar.
-
-Click a date (in current month) to select; then you can add, complete, or delete tasks for that date.
-
-Tasks are stored in the browser’s local storage.
-
-Footer includes author info and links.
-
-📂 Folder Structure
-typescript-start/
-├── public/
-├── src/
-│   ├── Components/
-│   │   ├── CurrentTimeAndDate/
-│   │   │   ├── CurrentTimeAndDate.tsx
-│   │   │   ├── CurrentTimeAndDate.css
-│   │   ├── Time/
-│   │   │   └── Time.tsx
-│   ├── App.tsx
-│   ├── main.tsx / index.tsx
-│   ├── index.css
-│   └── ...
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-└── README.md
-
-🤝 Contributing
-
-Fork the repository
-
-Create a feature branch (git checkout -b feature/YourFeature)
-
-Make your changes, commit with descriptive messages
-
-Push to your branch, then make a Pull Request
-
-I’m happy to review enhancements (UX, accessibility, styling, performance, etc.)
-
-📝 License
-
-This project is licensed under MIT License
-
-👤 Author
-
-Yousuf Ali
-Portfolio 
- · GitHub
- · LinkedIn
