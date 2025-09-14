@@ -13,76 +13,78 @@ import {
 } from "date-fns";
 import "./CurrentTimeAndDate.css";
 
-import Time from "../Time/Time";
+// QUOTES array: contains a list of motivational quotes to display.
+const QUOTES: string[] = [
+  "Believe you can and you're halfway there.",
+  "Success is not final; failure is not fatal: It is the courage to continue that counts.",
+  "Dream big and dare to fail.",
+  "Do something today that your future self will thank you for.",
+  "Stay positive, work hard, make it happen.",
+];
 
-/* Types -------------------------------------------------------------- */
-
-// Single todo item type
+// Todo type: defines the structure for a single to-do item.
 type Todo = {
   id: number;
   text: string;
   completed: boolean;
 };
 
-// Todos grouped by date string "yyyy-MM-dd"
+// TodosByDate type: defines the structure for the to-dos object, keyed by date.
 type TodosByDate = {
   [dateKey: string]: Todo[];
 };
 
-/* Component ---------------------------------------------------------- */
-
 const CurrentTimeAndDate: React.FC = () => {
-  // Live clock date (used for header and current displayed month)
+  // currentDate state: holds the current month and year for calendar navigation.
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
-
-  // Selected date for todo operations (null when no date is selected)
+  // selectedDate state: tracks the date clicked by the user to add to-dos.
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
-  // Todos state, loaded from localStorage on init
+  // todos state: stores all to-do items, loaded from and saved to local storage.
   const [todos, setTodos] = useState<TodosByDate>(() => {
     try {
       const saved = localStorage.getItem("todos");
-      return saved ? (JSON.parse(saved) as TodosByDate) : {};
+      return saved ? JSON.parse(saved) : {};
     } catch {
       return {};
     }
   });
-
-  // Input value for adding a todo
+  // inputValue state: controls the value of the to-do input field.
   const [inputValue, setInputValue] = useState<string>("");
+  // quote state: holds a random motivational quote.
+  const [quote, setQuote] = useState<string>("");
+  // liveTime state: a separate state to handle the live time display without affecting the calendar.
+  const [liveTime, setLiveTime] = useState<Date>(new Date());
 
-  // Update live clock every second
   useEffect(() => {
-    const timer = setInterval(() => setCurrentDate(new Date()), 1000);
+    // Sets up a timer to update the current time every second for the clock.
+    const timer = setInterval(() => setLiveTime(new Date()), 1000);
+    // Cleanup function to clear the timer when the component unmounts.
     return () => clearInterval(timer);
   }, []);
 
-  // Persist todos to localStorage whenever todos change
   useEffect(() => {
-    try {
-      localStorage.setItem("todos", JSON.stringify(todos));
-    } catch {
-      // ignore localStorage errors
-    }
+    // Saves the todos object to local storage whenever the todos state changes.
+    localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
-  /* Month navigation ------------------------------------------------- */
+  useEffect(() => {
+    // Chooses a random quote from the QUOTES array on initial component load.
+    const randomIndex = Math.floor(Math.random() * QUOTES.length);
+    setQuote(QUOTES[randomIndex]);
+  }, []);
 
-  // Advance the displayed month (affects calendar grid)
-  const goToNextMonth = () => {
-    setCurrentDate((prevDate) => addMonths(prevDate, 1));
+  // goNextMonth function: navigates the calendar to the next month.
+  const goNextMonth = () => {
+    setCurrentDate(prev => addMonths(prev, 1));
+    setSelectedDate(null);
+  };
+  // goPrevMonth function: navigates the calendar to the previous month.
+  const goPrevMonth = () => {
+    setCurrentDate(prev => subMonths(prev, 1));
     setSelectedDate(null);
   };
 
-  // Go back one month
-  const goToPreviousMonth = () => {
-    setCurrentDate((prevDate) => subMonths(prevDate, 1));
-    setSelectedDate(null);
-  };
-
-  /* Todo handlers ---------------------------------------------------- */
-
-  // Click a day in the calendar — only allow selecting days in the displayed month
+  // handleDayClick function: sets the selected date when a day in the calendar is clicked.
   const handleDayClick = (day: Date) => {
     if (isSameMonth(day, currentDate)) {
       setSelectedDate(day);
@@ -90,239 +92,125 @@ const CurrentTimeAndDate: React.FC = () => {
     }
   };
 
-  // Add a new todo for the selected date
-  const handleAddTodo = (e: React.FormEvent<HTMLFormElement>) => {
+  // goToToday function: navigates the calendar back to the current month and day.
+  const goToToday = () => {
+    setCurrentDate(new Date());
+    setSelectedDate(new Date());
+  };
+
+  // handleAddTodo function: adds a new to-do item for the selected date.
+  const handleAddTodo = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedDate) return;
-    const trimmed = inputValue.trim();
-    if (trimmed === "") return;
-
+    if (!selectedDate || inputValue.trim() === "") return;
     const dateKey = format(selectedDate, "yyyy-MM-dd");
-    const newTodo: Todo = { id: Date.now(), text: trimmed, completed: false };
-
-    setTodos((prevTodos) => ({
-      ...prevTodos,
-      [dateKey]: [...(prevTodos[dateKey] ?? []), newTodo],
-    }));
-
+    const newTodo: Todo = { id: Date.now(), text: inputValue.trim(), completed: false };
+    setTodos(prev => ({ ...prev, [dateKey]: [...(prev[dateKey] ?? []), newTodo] }));
     setInputValue("");
   };
 
-  // Toggle complete state of a todo
-  const handleToggleComplete = (dateKey: string, todoId: number) => {
-    setTodos((prevTodos) => {
-      const list = prevTodos[dateKey] ?? [];
-      return {
-        ...prevTodos,
-        [dateKey]: list.map((t) => (t.id === todoId ? { ...t, completed: !t.completed } : t)),
-      };
-    });
+  // handleToggleComplete function: toggles the completion status of a to-do item.
+  const handleToggleComplete = (dateKey: string, id: number) => {
+    setTodos(prev => ({
+      ...prev,
+      [dateKey]: prev[dateKey].map(t => t.id === id ? { ...t, completed: !t.completed } : t)
+    }));
   };
 
-  // Delete a todo
-  const handleDeleteTodo = (dateKey: string, todoId: number) => {
-    setTodos((prevTodos) => {
-      const list = prevTodos[dateKey] ?? [];
-      return {
-        ...prevTodos,
-        [dateKey]: list.filter((t) => t.id !== todoId),
-      };
-    });
+  // handleDeleteTodo function: removes a to-do item from the list.
+  const handleDeleteTodo = (dateKey: string, id: number) => {
+    setTodos(prev => ({ ...prev, [dateKey]: prev[dateKey].filter(t => t.id !== id) }));
   };
 
-  /* Calendar computation --------------------------------------------- */
-
+  // Calendar logic to determine days to display.
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(monthStart);
   const startDate = startOfWeek(monthStart);
   const endDate = endOfWeek(monthEnd);
   const days = eachDayOfInterval({ start: startDate, end: endDate });
-
-  const selectedDateKey = selectedDate ? format(selectedDate, "yyyy-MM-dd") : null;
-  const todosForSelectedDate: Todo[] = selectedDateKey ? todos[selectedDateKey] ?? [] : [];
-
-  /* Input change handler type-safe */
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
+  const selectedKey = selectedDate ? format(selectedDate, "yyyy-MM-dd") : null;
+  const todosForSelectedDate = selectedKey ? todos[selectedKey] ?? [] : [];
 
   return (
     <div className="ct-container">
-      {/* Big time at top */}
+      {/* Big Time and Date section */}
       <div className="top-block">
-        <div className="big-time">{format(currentDate, "hh:mm:ss a")}</div>
+        <div className="big-time">{format(liveTime, "hh:mm:ss a")}</div>
         <div className="big-date">{format(currentDate, "EEEE, do MMMM yyyy")}</div>
       </div>
 
-      {/* Calendar */}
+      {/* Calendar Component */}
       <div className="calendar">
         <div className="calendar-header">
-          <button
-            className="nav-btn prev-btn"
-            onClick={goToPreviousMonth}
-            aria-label="Previous month"
-            type="button"
-          >
-            &lt;
-          </button>
-
-          <h2 className="month-title">{format(currentDate, "MMMM yyyy")}</h2>
-
-          <button
-            className="nav-btn next-btn"
-            onClick={goToNextMonth}
-            aria-label="Next month"
-            type="button"
-          >
-            &gt;
-          </button>
+          <button onClick={goPrevMonth}>&lt;</button>
+          <h2>{format(currentDate, "MMMM yyyy")}</h2>
+          <button onClick={goNextMonth}>&gt;</button>
         </div>
-
         <div className="calendar-grid">
-          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-            <div key={d} className="day-name">
-              {d}
-            </div>
-          ))}
-
-          {days.map((day) => {
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(d => <div key={d} className="day-name">{d}</div>)}
+          {days.map(day => {
             const dayKey = format(day, "yyyy-MM-dd");
-            const isOutOfMonth = !isSameMonth(day, currentDate);
-            const isSelected =
-              selectedDateKey !== null && selectedDateKey === dayKey;
+            const isOut = !isSameMonth(day, currentDate);
+            const isSelected = selectedKey === dayKey;
             const hasTodos = (todos[dayKey] ?? []).length > 0;
-
             return (
               <div
                 key={day.toISOString()}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    handleDayClick(day);
-                  }
-                }}
                 onClick={() => handleDayClick(day)}
-                className={`day ${isOutOfMonth ? "inactive" : ""} ${isToday(day) ? "today" : ""} ${
-                  isSelected ? "selected" : ""
-                }`}
+                className={`day ${isOut ? "inactive" : ""} ${isToday(day) ? "today" : ""} ${isSelected ? "selected" : ""}`}
               >
                 {format(day, "d")}
-                {hasTodos && <div className="todo-dot" aria-hidden />}
+                {hasTodos && <div className="todo-dot" />}
               </div>
             );
           })}
         </div>
+
+      </div>
+      <div className="button-wrapper">
+        <button onClick={goToToday} className="go-today-btn">
+          Back to Home
+        </button>
       </div>
 
-      {/* To-Do App */}
+      {/* To-Do App Section */}
       <div className="todo-app-container">
         {selectedDate ? (
-          <div className="todo-list-wrapper">
-            <h3 className="todo-date-title">{format(selectedDate, "EEEE, MMMM do")}</h3>
-
-            <form className="todo-form" onSubmit={handleAddTodo}>
-              <input
-                type="text"
-                className="todo-input"
-                value={inputValue}
-                onChange={handleInputChange}
-                placeholder="Add a new task..."
-                name="todo"
-                aria-label="New todo"
-              />
-              <button type="submit" className="todo-add-btn">Add</button>
+          <>
+            <h3>{format(selectedDate, "EEEE, MMMM do")}</h3>
+            <form onSubmit={handleAddTodo}>
+              <input value={inputValue} onChange={e => setInputValue(e.target.value)} placeholder="Add a new task..." />
+              <button type="submit">Add</button>
             </form>
-
-            <ul className="todo-list">
-              {todosForSelectedDate.length > 0 ? (
-                todosForSelectedDate.map((todo: Todo) => (
-                  <li
-                    key={todo.id}
-                    className={`todo-item ${todo.completed ? "completed" : ""}`}
-                  >
-                    <span
-                      className="todo-text"
-                      onClick={() => selectedDateKey && handleToggleComplete(selectedDateKey, todo.id)}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          selectedDateKey && handleToggleComplete(selectedDateKey, todo.id);
-                        }
-                      }}
-                    >
-                      {todo.text}
-                    </span>
-                    <button
-                      className="delete-btn"
-                      onClick={() => selectedDateKey && handleDeleteTodo(selectedDateKey, todo.id)}
-                      aria-label={`Delete todo ${todo.text}`}
-                      type="button"
-                    >
-                      &times;
-                    </button>
-                  </li>
-                ))
-              ) : (
-                <p className="no-tasks-msg">No tasks for this day. Add one above!</p>
-              )}
+            <ul>
+              {todosForSelectedDate.length ? todosForSelectedDate.map(todo => (
+                <li key={todo.id} className={todo.completed ? "completed" : ""}>
+                  <span onClick={() => selectedKey && handleToggleComplete(selectedKey, todo.id)}>{todo.text}</span>
+                  <button onClick={() => selectedKey && handleDeleteTodo(selectedKey, todo.id)}>&times;</button>
+                </li>
+              )) : <p className="no-tasks-msg">No tasks for this day. Add one above!</p>}
             </ul>
-          </div>
-        ) : (
-          <p className="select-date-msg">Select a date to see or add tasks.</p>
-        )}
+          </>
+        ) : <p className="select-date-msg">Select a date to see or add tasks.</p>}
       </div>
 
-      {/* Optional Time component */}
-      <section className="text-center">
-        <Time />
-      </section>
+      {/* Quote Section */}
+      <div className="quote-section">💡 "{quote}"</div>
 
-      {/* Footer */}
-      <div className="footer">
-        <p className="footer-text">Developed with ❤️ by Md. Yousuf Ali</p>
+      {/* Footer Section with Social Icons */}
+      <footer className="footer">
+        <p>Developed with ❤️ by Md. Yousuf Ali</p>
         <div className="social-icons">
-          <a
-            href="https://www.linkedin.com/in/yousufali-portfolio"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn"
-          >
-            <img
-              src="https://img.icons8.com/ios-filled/50/000000/linkedin.png"
-              alt="LinkedIn"
-              className="social-icon"
-            />
+          <a href="https://www.linkedin.com/in/yousufali156" target="_blank" rel="noopener noreferrer">
+            <img src="https://img.icons8.com/ios-filled/50/000000/linkedin.png" alt="LinkedIn" />
           </a>
-
-          <a
-            href="https://github.com/yousuf-alii"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-          >
-            <img
-              src="https://img.icons8.com/ios-filled/50/000000/github.png"
-              alt="GitHub"
-              className="social-icon"
-            />
+          <a href="https://github.com/yousufali156" target="_blank" rel="noopener noreferrer">
+            <img src="https://img.icons8.com/ios-filled/50/000000/github.png" alt="GitHub" />
           </a>
-
-          <a
-            href="https://yousufali-portfolio.vercel.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Portfolio"
-          >
-            <img
-              src="https://img.icons8.com/?size=100&id=zrTptiWiMTtu&format=png&color=000000"
-              alt="Portfolio"
-              className="social-icon"
-            />
+          <a href="https://yousufali-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer">
+            <img src="https://img.icons8.com/?size=100&id=zrTptiWiMTtu&format=png&color=000000" alt="Portfolio" />
           </a>
         </div>
-      </div>
+      </footer>
     </div>
   );
 };
