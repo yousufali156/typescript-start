@@ -6,14 +6,15 @@
 
 ## 🚀 Table of Contents
 
-1. [Demo](#demo)  
-2. [Features](#features)  
-3. [Tech Stack](#tech-stack)  
-4. [Installation](#installation)  
-5. [Usage](#usage)  
-6. [Folder Structure](#folder-structure)  
-7. [Contributing](#contributing)  
-8. [License](#license)  
+- [TypeScript-Start](https://typescript-start.vercel.app/)
+  - [🚀 Table of Contents](#-table-of-contents)
+  - [🎯 Demo](#-Demo)
+  - [✅ Features](#-features)
+  - [🛠 Tech Stack](#-tech-stack)
+  - [⚙ Installation](#-installation)
+  - [📂 Folder Structure](#-folder-structure)
+  - [🎯 Demo](#-demo-1)
+  - [👤 Author](#-author)
 
 ---
 
@@ -78,24 +79,26 @@ Tasks are stored in the browser’s local storage.
 
 Footer includes author info and links.
 
-📂 Folder Structure
-typescript-start/
-├── public/
-├── src/
-│   ├── Components/
-│   │   ├── CurrentTimeAndDate/
-│   │   │   ├── CurrentTimeAndDate.tsx
-│   │   │   ├── CurrentTimeAndDate.css
-│   │   ├── Time/
-│   │   │   └── Time.tsx
-│   ├── App.tsx
-│   ├── main.tsx / index.tsx
-│   ├── index.css
-│   └── ...
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-└── README.md
+## 📂 Folder Structure  
+
+typescript-start/<br>
+├── public/<br>
+├── src/<br>
+│   ├── Components/<br>
+│   │   ├── CurrentTimeAndDate/<br>
+│   │   │   ├── CurrentTimeAndDate.tsx<br>
+│   │   │   ├── CurrentTimeAndDate.css<br>
+│   │   ├── Time/<br>
+│   │   │   └── Time.tsx<br>
+│   ├── App.tsx<br>
+│   ├── main.tsx / index.tsx<br>
+│   ├── index.css<br>
+│   └── ...<br>
+├── package.json<br>
+├── tsconfig.json<br>
+├── vite.config.ts<br>
+└── README.md  
+
 
 🤝 Contributing
 
@@ -130,7 +133,3 @@ This project is licensed under MIT License
 ---
 
 
-
-
-=======
->>>>>>> 9684f05ba8226ea5fde68386579165676f78942e
