@@ -115,13 +115,17 @@ This project is licensed under MIT License
 
 ---
 
+## 🎯 Demo
+
+[Live Site](https://typescript-start.vercel.app/)  
+
 ## 👤 Author
 
 **Yousuf Ali**  
 
-- 🌐 [Portfolio](https://yousufali.dev)  
+- 🌐 [Portfolio](https://yousufali-portfolio.vercel.app/)  
 - 💻 [GitHub](https://github.com/yousufali156)  
-- 🔗 [LinkedIn](https://www.linkedin.com/in/mdyousufali)  
+- 🔗 [LinkedIn](https://www.linkedin.com/in/yousufali156)  
 
 ---
 
