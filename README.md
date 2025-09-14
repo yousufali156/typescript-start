@@ -52,17 +52,17 @@
 1. Clone the repo  
 ```bash
    git clone https://github.com/yourusername/typescript-start.git
-   cd typescript-start```
+   cd typescript-start
 2. Install dependencies
-    ```bash
-      npm install```
+ 
+      npm install
 
 3. Start development server
-    ```bash
+ 
       npm run dev
 4.Build for production
-    ```bash
-     npm run build  ```  
+
+     npm run build  ``` 
 
 
 
