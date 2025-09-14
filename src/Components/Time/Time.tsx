@@ -1,34 +1,36 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-const Time = () => {
-  const [time, setTime] = useState(new Date());
+const Time: React.FC = () => {
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTime(new Date());
-    }, 1000);
-
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  const formattedTime = time.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
-
-  const formattedDate = time.toLocaleDateString([], {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-[200px] bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 rounded-2xl shadow-lg">
-      <h2 className="text-2xl font-semibold mb-2">📅 Today</h2>
-      <p className="text-lg">{formattedDate}</p>
-      <h1 className="text-5xl font-bold mt-4 animate-pulse">{formattedTime}</h1>
+    <div className="flex justify-center items-center py-10">
+      <div className="bg-white/30 backdrop-blur-md shadow-lg rounded-2xl px-8 py-6 border border-white/20 text-center w-full max-w-md transition-transform hover:scale-105">
+        {/* Time */}
+        <p className="text-5xl md:text-6xl font-extrabold text-gray-900 drop-shadow-sm">
+          {currentTime.toLocaleTimeString()}
+        </p>
+
+        {/* Date */}
+        <p className="mt-3 text-lg md:text-xl font-medium text-gray-700">
+          {currentTime.toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </p>
+
+        {/* Small tagline */}
+        <p className="mt-4 text-sm text-gray-500 italic">
+          Stay productive, one second at a time ⏳
+        </p>
+      </div>
     </div>
   );
 };
